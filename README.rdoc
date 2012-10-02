@@ -1,0 +1,9 @@
+Tuxitrix
+Simple tetris like game, use WASD on keyboard for plaing.
+Use Escape key for exit.
+
+=== Authors
+Andrew Tulay (Tulyakov) - main developer. (mhyhre@gmail.com)
+
+=== Testers
+Andrew Kigay
