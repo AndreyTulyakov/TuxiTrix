@@ -1,5 +1,5 @@
-Tuxitrix
-Simple tetris like game, use WASD on keyboard for plaing.
+= Tuxitrix
+Is a simple, tetris like game, use WASD on keyboard for playing.
 Use Escape key for exit.
 
 === Authors
