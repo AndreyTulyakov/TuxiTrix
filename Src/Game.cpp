@@ -6,7 +6,7 @@ Game::Game()
 	pBoard = nullptr;
 	CurrentPiece.SetFigure(GetRandom(0,PIECE_TYPES-1));
 
-	Time = timeGetTime();
+	Time = 666;
 	LastTime = Time;
 
 	GameOver = false;
@@ -52,6 +52,9 @@ void Game::LoadResource()
 	AttachChild(&mTextMessage);
 
 	Quad.SetTextureAtlas(&QuadTex);
+	QuadTexReg.SetFullAtlasRegion(&QuadTex);
+
+	QuadGroup.Create(BOARD_SIZE_X*BOARD_SIZE_Y,&QuadTexReg);
 }
 
 
@@ -106,16 +109,51 @@ void Game::Update()
 		}
 	}
 
-	
 
+	// UPDATE BOARD QUAD GROUP
 
-	Time = timeGetTime();
-	if(Level && (Time - LastTime > (500)/(Level*0.5f)) )
-	{
-		if(!GameOver)
+	int2 FieldSize = pBoard->GetSize();
+	float tunelColor=0.0f;
+
+	// Draw quad field
+	float2 sQuadPos(50,50);
+	float2 QuadSize(16,16);
+
+	for(int x=0; x<FieldSize.x; x++)
+		for(int y=0; y<FieldSize.y; y++)
 		{
-			DoNextStep();
-			LastTime = Time;
+			int i = x+y*FieldSize.x;
+			QuadGroup.GetSprite(i)->SetPosition(
+				sQuadPos.x+(QuadSize.x+1)*x,
+				sQuadPos.y+(QuadSize.y+1)*y);
+
+			if( pBoard->GetCell(x,y) )
+			{
+				QuadGroup.GetSprite(i)->SetColor(XMFLOAT4( 0.75f, 0.75f, 1.0f, 1.0f));
+			}
+			else
+			{
+				float tunelColor = 1.0f - (abs(x + 0.5f - ((FieldSize.x) / 2.0f)))/ ((FieldSize.x) / 2.0f);
+
+				if (y < PIECE_MAX_SIZE) {
+					QuadGroup.GetSprite(i)->SetColor(XMFLOAT4( 0.8f, tunelColor * 0.7f, tunelColor * 0.7f, 1.0f));
+				} else {
+					QuadGroup.GetSprite(i)->SetColor(XMFLOAT4( tunelColor * 0.4f, (tunelColor+0.2f) * 0.4f,tunelColor * 0.4f, 1.0f));
+				}
+			}
+		}
+
+
+	// if next step
+	if(Level)
+	{
+		if(timeGetTime()-LastTime>Time)
+		{
+			if(!GameOver)
+			{
+				DoNextStep();
+				LastTime = timeGetTime();
+			}
 		}
 	}
 
@@ -177,7 +215,11 @@ void Game::DoNextStep()
 				Scores += 100;
 
 				// Change level
-				if(Scores%500==0) Level++;
+				if(Scores%500==0) 
+				{
+					Level++;
+					Time = (DWORD)(1000.0f /(0.5f*Level+1));
+				}
 			}
 		}
 
@@ -263,45 +305,8 @@ void Game::Draw()
 
 void Game::DrawBoard()
 {
-	int2 FieldSize = pBoard->GetSize();
-	float tunelColor=0.0f;
-
-	// Draw quad field
-	float2 sQuadPos(50,50);
-	float2 QuadSize(16,16);
-
-	for(int x=0; x<FieldSize.x; x++)
-		for(int y=0; y<FieldSize.y; y++)
-		{
-
-			// Quadrant
-			Quad.SetPosition(sQuadPos.x+(QuadSize.x+1)*x,sQuadPos.y+(QuadSize.y+1)*y,0);
-
-			if( pBoard->GetCell(x,y) )
-			{
-				Quad.SetAlpha(1.0f);
-				Quad.SetColorModulation(0.8f, 0.8f, 1.0f);
-			}
-			else
-			{
-				tunelColor =  1.0f-(abs(x+0.5f-((FieldSize.x)/2.0f)))/((FieldSize.x)/2.0f);
-				tunelColor/=2.0f;
-				Quad.SetAlpha(0.8f);
-
-				// if SIDES
-				if(x==0 || x==FieldSize.x-1 || y==FieldSize.y-1)
-					tunelColor*=0.3f;
-
-				// if RED ZONE
-				if(y<PIECE_MAX_SIZE)
-					Quad.SetColorModulation(1.0f, tunelColor, tunelColor);
-				else
-					Quad.SetColorModulation(tunelColor, tunelColor*1.2f, tunelColor);
-			}
-
-			Quad.Update();
-			Quad.Draw();
-		}
+	QuadGroup.Update();
+	QuadGroup.Draw();
 }
 
 void Game::DrawPiece()

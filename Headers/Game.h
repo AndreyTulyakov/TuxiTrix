@@ -68,5 +68,7 @@ private:
 	Text mTextMessage;
 
 	Sprite Quad;
+	SpriteGroup QuadGroup;
 	TextureAtlas QuadTex;
+	TextureRegion QuadTexReg;
 };

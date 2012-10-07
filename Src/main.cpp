@@ -50,7 +50,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
 	mMainScene.LoadResource();
 
-	Graphics::Instance()->SetClearColor( Color(0.27f, 0.48f, 0.27f, 1.0f) );
+	Graphics::Instance()->SetClearColor( Color(0.8f, 0.8f, 0.9f, 1.0f) );
 
 
 	try
