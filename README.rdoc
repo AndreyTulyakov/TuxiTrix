@@ -6,4 +6,4 @@ Authors:
 - Andrey Tulyakov (mhyhre@gmail.com)
 
 === Testers
--Andrey Kigay
+- Andrey Kigay
