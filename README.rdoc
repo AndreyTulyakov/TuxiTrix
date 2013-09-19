@@ -2,8 +2,8 @@
 Is a simple, tetris like game, use WASD on keyboard for playing.
 Use Escape key for exit.
 
-=== Authors
-Andrew Tulay (Tulyakov) - main developer. (mhyhre@gmail.com)
+Authors:
+- Andrey Tulyakov (mhyhre@gmail.com)
 
 === Testers
-Andrew Kigay
+-Andrey Kigay
