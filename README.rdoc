@@ -5,5 +5,5 @@ Use Escape key for exit.
 Authors:
 - Andrey Tulyakov (mhyhre@gmail.com)
 
-=== Testers
+Testers:
 - Andrey Kigay
